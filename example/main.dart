@@ -40,35 +40,31 @@ class DemoApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // Whenever the theme controller notifies the animation listener in the
     // AnimatedBuilder, the MaterialApp is rebuilt.
-    return AnimatedBuilder(
-        animation: controller,
-        builder: (BuildContext context, Widget? child) {
-          return MaterialApp(
-            // showSemanticsDebugger: true,
-            debugShowCheckedModeBanner: false,
-            scrollBehavior: const MaterialScrollBehavior().copyWith(
-                dragDevices: {
-                  PointerDeviceKind.mouse,
-                  PointerDeviceKind.touch
-                }),
-            title: 'Themes Playground',
-            // The Theme controller controls if we use FlexColorScheme made
-            // ThemeData or standard SDK ThemeData.from a ColorScheme. It also
-            // controls all the configuration parameters used to define the
-            // FlexColorScheme object that produces the ThemeData object.
-            theme: controller.useFlexColorScheme
-                ? flexThemeLight(controller)
-                : themeDataFromLight(controller),
-            darkTheme: controller.useFlexColorScheme
-                ? flexThemeDark(controller)
-                : themeDataFromDark(controller),
-            // Use the dark or light theme based on controller setting.
-            themeMode: controller.themeMode,
-            // Pass the controller to the HomePage where we use it to change
-            // the theme settings that will cause themes above to change and
-            // rebuild the entire look of the app based on modified theme.
-            home: HomePage(controller: controller),
-          );
-        });
+    return MaterialApp(
+      key: Key('${controller.schemeIndex}'
+          '${controller.useFlexColorScheme}'
+          '${controller.useSubThemes}'),
+      // showSemanticsDebugger: true,
+      debugShowCheckedModeBanner: false,
+      scrollBehavior: const MaterialScrollBehavior().copyWith(
+          dragDevices: {PointerDeviceKind.mouse, PointerDeviceKind.touch}),
+      title: 'Themes Playground',
+      // The Theme controller controls if we use FlexColorScheme made
+      // ThemeData or standard SDK ThemeData.from a ColorScheme. It also
+      // controls all the configuration parameters used to define the
+      // FlexColorScheme object that produces the ThemeData object.
+      theme: controller.useFlexColorScheme
+          ? flexThemeLight(controller)
+          : themeDataFromLight(controller),
+      darkTheme: controller.useFlexColorScheme
+          ? flexThemeDark(controller)
+          : themeDataFromDark(controller),
+      // Use the dark or light theme based on controller setting.
+      themeMode: controller.themeMode,
+      // Pass the controller to the HomePage where we use it to change
+      // the theme settings that will cause themes above to change and
+      // rebuild the entire look of the app based on modified theme.
+      home: HomePage(controller: controller),
+    ).toThemeSwitchBuilder(controller);
   }
 }

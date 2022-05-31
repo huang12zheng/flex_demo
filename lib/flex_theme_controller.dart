@@ -5,6 +5,7 @@ export '/shared/const/app_data.dart';
 export '/shared/const/store.dart';
 
 export '/shared/controllers/theme_controller.dart';
+export '/shared/controllers/theme_switch_animated.dart';
 
 export 'package:flex_demo/shared/services/theme_service.dart';
 export 'package:flex_demo/shared/services/theme_service_hive.dart';
