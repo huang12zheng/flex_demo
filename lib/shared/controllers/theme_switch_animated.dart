@@ -6,6 +6,8 @@ Key getKey(ThemeController controller) => Key('${controller.schemeIndex}'
     '${controller.useSubThemes}');
 
 Widget _themeSwitchBuilder(ThemeController controller, Widget child) =>
+    // Whenever the theme controller notifies the animation listener in the
+    // AnimatedBuilder, the MaterialApp is rebuilt.
     AnimatedBuilder(
         animation: controller,
         builder: (BuildContext context, Widget? child) {
