@@ -59,7 +59,7 @@ class AppData {
   // this is media size.
   // Only at higher than this breakpoint will the menu expand from rail and
   // be possible to toggle between menu and rail. Below this breakpoint it
-  // toggles between hidden in the Drawer and being a Rail, also on phones.
+  // toggles between hidden in the Drawerer and being a Rail, also on phones.
   // This size was chosen because in combination codeViewWidthBreakpoint, it
   // gives us a breakpoint where we get code side by side view in desktop
   // rail mode already, and when it switches to menu mode, the desktop is

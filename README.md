@@ -29,7 +29,9 @@ Color Scheme source from [flex_color_scheme](https://github.com/rydmike/flex_col
   > responsive breakpoints,responsiveInsets,visualDensity,TextTheme
   * [AppColor](https://github.com/rydmike/flex_color_scheme/blob/master/example/lib/shared/const/app_color.dart)
 * [widget panel view](https://github.com/rydmike/flex_color_scheme/blob/master/example/lib/example5/widgets/pages/panel_view.dart)
-
+* [Responsive]
+  * getValueForDeviceAndOrintation and DeviceAndOrintation
+  * getValueForScreenType
 ## Getting started
 
 TODO: List prerequisites and provide or point to information on how to

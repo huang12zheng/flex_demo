@@ -14,12 +14,15 @@ final isPhoneProvider = Provider((ref) {
       media.size.height < AppData.phoneHeightBreakpoint;
   return isPhone;
 });
+
 const double _kBreakpointShowFullMenu = 900;
 final isDesktopProvider = Provider((ref) {
   final ctx = ref.watch(contextProvider);
 
   final media = ref.watch(mediaStateFamily(ctx));
   final bool isDesktop = media.size.width >= _kBreakpointShowFullMenu;
+  // OrientationBuilder
+
   return isDesktop;
 });
 final themeFamily =

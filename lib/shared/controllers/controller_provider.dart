@@ -23,6 +23,7 @@ class ThemeControllerProvider extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = ref.watch(themeControllerProvider);
+
     return controller.when(
       data: builder,
       error: (err, stack) => Text('Error: $err'),
