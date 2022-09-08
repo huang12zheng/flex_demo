@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import '../../const/app_data.dart';
 import '../universal/maybe_tooltip.dart';
 import 'about.dart';
-import 'pop_button.dart';
+import '../../../pop_button.dart';
 
 // ignore_for_file: comment_references
 

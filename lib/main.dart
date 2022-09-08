@@ -4,7 +4,7 @@ import '../shared/controllers/theme_controller.dart';
 import '../shared/services/theme_service.dart';
 import '../shared/services/theme_service_hive.dart';
 import '../shared/utils/app_scroll_behavior.dart';
-import 'shared/widgets/app/pop_button.dart';
+import 'pop_button.dart';
 import 'theme/flex_theme_dark.dart';
 import 'theme/flex_theme_light.dart';
 import 'theme/theme_data_dark.dart';

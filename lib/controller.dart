@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import '../shared/controllers/theme_controller.dart';
 import '../shared/services/theme_service.dart';
 import '../shared/services/theme_service_hive.dart';
+import 'enum_convert.dart';
+export '../shared/services/theme_service_hive.dart' show ThemeServiceHive;
 
 Future<ThemeController> getController() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,7 +29,8 @@ Future<ThemeController> getController() async {
 
   // The ThemeServiceHive constructor requires a box name, the others do not.
   // The box name is just a file name for the file that stores the settings.
-  final ThemeService themeService = ThemeServiceHive('flex_color_scheme_v5_box_5');
+  final ThemeService themeService =
+      ThemeServiceHive('flex_color_scheme_v5_box_5');
   // Initialize the theme service.
   await themeService.init();
   // Create a ThemeController that uses the ThemeService.
@@ -33,10 +38,24 @@ Future<ThemeController> getController() async {
   // Load preferred theme settings, while the app is loading, before MaterialApp
   // is created, this prevents a theme change when the app is first displayed.
   await themeController.loadAll();
-  // Run the app and pass in the ThemeController. The app listens to the
-  // ThemeController for changes. The same ThemeController as used in example 4
-  // controls all the myriad of Theme settings and the ThemeService also
-  // persists the settings with the injected ThemeServiceHive.
-  // runApp(DemoApp(controller: themeController));
+
   return themeController;
+}
+
+extension ThemeServiceX on ThemeController {
+  String get getJson => encodeWithController(this);
+  Future<void> setHive(String input) async {
+    final converter = getConverter();
+    await (themeService as ThemeServiceHive)
+        .hiveBox
+        .putAll(converter.decode(input));
+  }
+}
+
+String encodeWithController(ThemeController themeController) {
+  final converter = getConverter();
+  final obj =
+      (themeController.themeService as ThemeServiceHive).hiveBox.toMap();
+  final str = converter.encode(obj);
+  return str;
 }

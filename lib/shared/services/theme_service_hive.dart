@@ -10,7 +10,7 @@ import 'theme_service_hive_adapters.dart';
 // The handy part is that if it gets in the way in debugging, it is an easy
 // toggle to turn it off here too. Often I just leave them true if it is one
 // I want to see in dev mode, unless it is too chatty.
-const bool _debug = !kReleaseMode && true;
+const bool _debug = false;
 
 /// A [ThemeService] implementation that stores and retrieves theme settings
 /// locally using the package Hive: https://pub.dev/packages/hive
@@ -25,7 +25,7 @@ class ThemeServiceHive implements ThemeService {
 
   // Holds an instance to Hive box, must be initialized
   // by the init call before accessing the storage box.
-  late final Box<dynamic> _hiveBox;
+  late final Box<dynamic> hiveBox;
 
   /// ThemeServiceHive's init implementation. Must call be before accessing
   /// the storage box.
@@ -63,7 +63,7 @@ class ThemeServiceHive implements ThemeService {
     // time in this demo app.
     await Hive.openBox<dynamic>(boxName);
     // Assign the box to our instance.
-    _hiveBox = Hive.box<dynamic>(boxName);
+    hiveBox = Hive.box<dynamic>(boxName);
   }
 
   // Register all custom Hive data adapters.
@@ -91,7 +91,7 @@ class ThemeServiceHive implements ThemeService {
   @override
   Future<T> load<T>(String key, T defaultValue) async {
     try {
-      final T loaded = _hiveBox.get(key, defaultValue: defaultValue) as T;
+      final T loaded = hiveBox.get(key, defaultValue: defaultValue) as T;
       if (_debug) {
         debugPrint('Hive type   : $key as ${defaultValue.runtimeType}');
         debugPrint('Hive loaded : $key as $loaded with ${loaded.runtimeType}');
@@ -115,7 +115,7 @@ class ThemeServiceHive implements ThemeService {
   @override
   Future<void> save<T>(String key, T value) async {
     try {
-      await _hiveBox.put(key, value);
+      await hiveBox.put(key, value);
       if (_debug) {
         debugPrint('Hive type   : $key as ${value.runtimeType}');
         debugPrint('Hive saved  : $key as $value');

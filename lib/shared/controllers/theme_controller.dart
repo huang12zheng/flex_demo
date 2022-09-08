@@ -48,6 +48,7 @@ class ThemeController with ChangeNotifier {
 
   // Make the ThemeService private so it cannot be used directly.
   final ThemeService _themeService;
+  ThemeService get themeService => _themeService;
 
   /// Load all ThemeController settings from the ThemeService. It may load from
   /// app coded defaults, a local database or the internet. The controller only
