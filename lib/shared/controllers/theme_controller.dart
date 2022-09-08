@@ -82,6 +82,18 @@ class ThemeController with ChangeNotifier {
       Store.keyDefaultRadius,
       Store.defaultDefaultRadius,
     );
+    _defaultRadius = await _themeService.load(
+      Store.keyDefaultRadius,
+      Store.defaultDefaultRadius,
+    );
+    _thinBorderWidth = await _themeService.load(
+      Store.keyThinBorderWidth,
+      Store.defaultThinBorderWidth,
+    );
+    _thickBorderWidth = await _themeService.load(
+      Store.keyThickBorderWidth,
+      Store.defaultThickBorderWidth,
+    );
     _tooltipsMatchBackground = await _themeService.load(
         Store.keyTooltipsMatchBackground, Store.defaultTooltipsMatchBackground);
     //
@@ -321,12 +333,18 @@ class ThemeController with ChangeNotifier {
     _elevatedButtonSchemeColor = await _themeService.load(
         Store.keyElevatedButtonSchemeColor,
         Store.defaultElevatedButtonSchemeColor);
+    _elevatedButtonSecondarySchemeColor = await _themeService.load(
+        Store.keyElevatedButtonSecondarySchemeColor,
+        Store.defaultElevatedButtonSecondarySchemeColor);
     _elevatedButtonBorderRadius = await _themeService.load(
         Store.keyElevatedButtonBorderRadius,
         Store.defaultElevatedButtonBorderRadius);
     _outlinedButtonSchemeColor = await _themeService.load(
         Store.keyOutlinedButtonSchemeColor,
         Store.defaultOutlinedButtonSchemeColor);
+    _outlinedButtonOutlineSchemeColor = await _themeService.load(
+        Store.keyOutlinedButtonOutlineSchemeColor,
+        Store.defaultOutlinedButtonOutlineSchemeColor);
     _outlinedButtonBorderRadius = await _themeService.load(
         Store.keyOutlinedButtonBorderRadius,
         Store.defaultOutlinedButtonBorderRadius);
@@ -372,6 +390,12 @@ class ThemeController with ChangeNotifier {
         Store.defaultDialogBackgroundSchemeColor);
     _dialogBorderRadius = await _themeService.load(
         Store.keyDialogBorderRadius, Store.defaultDialogBorderRadius);
+    //
+    // Custom surface tint color SETTINGS.
+    _surfaceTintLight = await _themeService.load(
+        Store.keySurfaceTintLight, Store.defaultSurfaceTintLight);
+    _surfaceTintDark = await _themeService.load(
+        Store.keySurfaceTintDark, Store.defaultSurfaceTintDark);
     //
     // Custom color SETTINGS.
     _primaryLight = await _themeService.load(
@@ -436,6 +460,8 @@ class ThemeController with ChangeNotifier {
     await setSchemeIndex(Store.defaultSchemeIndex, false);
     await setInteractionEffects(Store.defaultInteractionEffects, false);
     await setDefaultRadius(Store.defaultDefaultRadius, false);
+    await setThinBorderWidth(Store.defaultThinBorderWidth, false);
+    await setThickBorderWidth(Store.defaultThickBorderWidth, false);
     await setTooltipsMatchBackground(
         Store.defaultTooltipsMatchBackground, false);
     //
@@ -586,10 +612,14 @@ class ThemeController with ChangeNotifier {
     await setTextButtonBorderRadius(Store.defaultTextButtonBorderRadius, false);
     await setElevatedButtonSchemeColor(
         Store.defaultElevatedButtonSchemeColor, false);
+    await setElevatedButtonSecondarySchemeColor(
+        Store.defaultElevatedButtonSecondarySchemeColor, false);
     await setElevatedButtonBorderRadius(
         Store.defaultElevatedButtonBorderRadius, false);
     await setOutlinedButtonSchemeColor(
         Store.defaultOutlinedButtonSchemeColor, false);
+    await setOutlinedButtonOutlineSchemeColor(
+        Store.defaultOutlinedButtonOutlineSchemeColor, false);
     await setOutlinedButtonBorderRadius(
         Store.defaultOutlinedButtonBorderRadius, false);
     await setToggleButtonsSchemeColor(
@@ -617,6 +647,11 @@ class ThemeController with ChangeNotifier {
     await setDialogBackgroundSchemeColor(
         Store.defaultDialogBackgroundSchemeColor, false);
     await setDialogBorderRadius(Store.defaultDialogBorderRadius, false);
+    //
+    // Surface tint colors.
+    await setSurfaceTintLight(Store.defaultSurfaceTintLight, false);
+    await setSurfaceTintDark(Store.defaultSurfaceTintDark, false);
+    //
     // Not persisted, locally controlled popup selection for ThemeService,
     // resets to actual used platform when settings are reset or app loaded.
     await setPlatform(defaultTargetPlatform, false);
@@ -786,6 +821,24 @@ class ThemeController with ChangeNotifier {
     _defaultRadius = value;
     if (notify) notifyListeners();
     await _themeService.save(Store.keyDefaultRadius, value);
+  }
+
+  late double? _thinBorderWidth;
+  double? get thinBorderWidth => _thinBorderWidth;
+  Future<void> setThinBorderWidth(double? value, [bool notify = true]) async {
+    if (value == _thinBorderWidth) return;
+    _thinBorderWidth = value;
+    if (notify) notifyListeners();
+    await _themeService.save(Store.keyThinBorderWidth, value);
+  }
+
+  late double? _thickBorderWidth;
+  double? get thickBorderWidth => _thickBorderWidth;
+  Future<void> setThickBorderWidth(double? value, [bool notify = true]) async {
+    if (value == _thickBorderWidth) return;
+    _thickBorderWidth = value;
+    if (notify) notifyListeners();
+    await _themeService.save(Store.keyThickBorderWidth, value);
   }
 
   late bool _tooltipsMatchBackground;
@@ -1272,22 +1325,22 @@ class ThemeController with ChangeNotifier {
   // AppBar SETTINGS.
   // ===========================================================================
 
-  late FlexAppBarStyle _appBarStyleLight;
-  FlexAppBarStyle get appBarStyleLight => _appBarStyleLight;
+  late FlexAppBarStyle? _appBarStyleLight;
+  FlexAppBarStyle? get appBarStyleLight => _appBarStyleLight;
   Future<void> setAppBarStyleLight(FlexAppBarStyle? value,
       [bool notify = true]) async {
-    if (value == null) return;
+    // if (value == null) return;
     if (value == _appBarStyleLight) return;
     _appBarStyleLight = value;
     if (notify) notifyListeners();
     await _themeService.save(Store.keyAppBarStyleLight, value);
   }
 
-  late FlexAppBarStyle _appBarStyleDark;
-  FlexAppBarStyle get appBarStyleDark => _appBarStyleDark;
+  late FlexAppBarStyle? _appBarStyleDark;
+  FlexAppBarStyle? get appBarStyleDark => _appBarStyleDark;
   Future<void> setAppBarStyleDark(FlexAppBarStyle? value,
       [bool notify = true]) async {
-    if (value == null) return;
+    // if (value == null) return;
     if (value == _appBarStyleDark) return;
     _appBarStyleDark = value;
     if (notify) notifyListeners();
@@ -1797,6 +1850,18 @@ class ThemeController with ChangeNotifier {
     await _themeService.save(Store.keyElevatedButtonSchemeColor, value);
   }
 
+  late SchemeColor? _elevatedButtonSecondarySchemeColor;
+  SchemeColor? get elevatedButtonSecondarySchemeColor =>
+      _elevatedButtonSecondarySchemeColor;
+  Future<void> setElevatedButtonSecondarySchemeColor(SchemeColor? value,
+      [bool notify = true]) async {
+    if (value == _elevatedButtonSecondarySchemeColor) return;
+    _elevatedButtonSecondarySchemeColor = value;
+    if (notify) notifyListeners();
+    await _themeService.save(
+        Store.keyElevatedButtonSecondarySchemeColor, value);
+  }
+
   late double? _elevatedButtonBorderRadius;
   double? get elevatedButtonBorderRadius => _elevatedButtonBorderRadius;
   Future<void> setElevatedButtonBorderRadius(double? value,
@@ -1815,6 +1880,17 @@ class ThemeController with ChangeNotifier {
     _outlinedButtonSchemeColor = value;
     if (notify) notifyListeners();
     await _themeService.save(Store.keyOutlinedButtonSchemeColor, value);
+  }
+
+  late SchemeColor? _outlinedButtonOutlineSchemeColor;
+  SchemeColor? get outlinedButtonOutlineSchemeColor =>
+      _outlinedButtonOutlineSchemeColor;
+  Future<void> setOutlinedButtonOutlineSchemeColor(SchemeColor? value,
+      [bool notify = true]) async {
+    if (value == _outlinedButtonOutlineSchemeColor) return;
+    _outlinedButtonOutlineSchemeColor = value;
+    if (notify) notifyListeners();
+    await _themeService.save(Store.keyOutlinedButtonOutlineSchemeColor, value);
   }
 
   late double? _outlinedButtonBorderRadius;
@@ -1999,6 +2075,27 @@ class ThemeController with ChangeNotifier {
     _dialogBorderRadius = value;
     if (notify) notifyListeners();
     await _themeService.save(Store.keyDialogBorderRadius, value);
+  }
+
+  // Custom surface tint color SETTINGS.
+  // ===========================================================================
+
+  late Color? _surfaceTintLight;
+  Color? get surfaceTintLight => _surfaceTintLight;
+  Future<void> setSurfaceTintLight(Color? value, [bool notify = true]) async {
+    if (value == _surfaceTintLight) return;
+    _surfaceTintLight = value;
+    if (notify) notifyListeners();
+    await _themeService.save(Store.keySurfaceTintLight, value);
+  }
+
+  late Color? _surfaceTintDark;
+  Color? get surfaceTintDark => _surfaceTintDark;
+  Future<void> setSurfaceTintDark(Color? value, [bool notify = true]) async {
+    if (value == _surfaceTintDark) return;
+    _surfaceTintDark = value;
+    if (notify) notifyListeners();
+    await _themeService.save(Store.keySurfaceTintDark, value);
   }
 
   // Custom color SETTINGS.

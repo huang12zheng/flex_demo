@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 
 import '../../shared/const/app_color.dart';
 import '../../shared/const/app_data.dart';
+import '../../shared/const/flex_tone.dart';
 import '../../shared/controllers/theme_controller.dart';
+import 'code_theme.dart';
 
 /// This function calls [flexColorSchemeLight] and uses
 /// [FlexColorScheme.toTheme] to return the [ThemeData] object represented by
@@ -18,11 +20,49 @@ import '../../shared/controllers/theme_controller.dart';
 /// The [ThemeData.from] a [ColorScheme] will be used to demonstrate difference
 /// using the exact same [ColorScheme], but using just default [ThemeData] with
 /// no [FlexColorScheme] theming applied.
-ThemeData flexThemeLight(ThemeController controller) =>
-    flexColorSchemeLight(controller).toTheme;
+ThemeData flexThemeLight(ThemeController controller) {
+  // Get the effective theme primary color, so we can use it as source color to
+  // harmonize the CodeTheme extension colors towards it. Which is done by using
+  // the M3 package MaterialColorUtilities function Blend.harmonize. At this
+  // point the source color does not matter.
+  //
+  // Here it is worth pointing out this creates an extra FlexColorScheme that we
+  // never use to make our ThemeData, we only use it to get its identical
+  // effective ColorScheme and then grab the effective primary color. We then
+  // proceed to make an almost identical FlexColorScheme, but with the effective
+  // primary color we got as its color, and use it as source color to harmonize
+  // our out custom theme extension colors with it.
+  //
+  // The way the M3 seed based color algorithm and the harmonize color functions
+  // work. We could actually use our ThemeController `controller` here and get
+  // the effective input color via it. Then use that as source color for
+  // the harmonization. In tests this produced same harmonization results as
+  // when using the actual effective tint color created when also using it
+  // as a seed to make the effective ColorScheme.
+  // However, in dark mode, when not using seeds, but generating dark mode
+  // colors from light mode primary color, with or without swap primary and
+  // container colors on, by using `toDark` to compute the dark mode tint
+  // color from the light mode primary input color. The harmonization results
+  // diverge a bit from the harmonization result based on actual effective dark
+  // mode tint color and using the in the controller accessible input color
+  // as source color. This way by getting the actual effective ColorScheme is
+  // simpler and guaranteed to always produce the right M3 intended color
+  // harmonization towards the effective surface tint color. Regardless of what
+  // settings and config we have used in the Themes Playground to define and
+  // make our surface tint color, even custom one is adjusted for.
+  final Color source =
+      flexColorSchemeLight(controller, Colors.black).toScheme.surfaceTint;
+  // Now we can use a function that takes our ThemeController and source color,
+  // which is the effective primary color, the get the effective ThemeData.
+  return flexColorSchemeLight(controller, source).toTheme;
+}
 
 /// Create the FlexColorScheme object represented by our current
-/// [ThemeController] configuration.
+/// [ThemeController] value [controller] configuration and [source] color.
+///
+/// The [source] color is used to color adjust all the custom code highlight
+/// theme colors added via ThemeData extension [CodeTheme], towards the
+/// [source] color.
 ///
 /// This setup may seem complex, but all the controller does is represent
 /// configuration values selected in the UI that are input to a large number
@@ -31,13 +71,24 @@ ThemeData flexThemeLight(ThemeController controller) =>
 ///
 /// Normally you would probably only have a few properties offered as possible
 /// features the user can change. Since this is a feature demo of almost
-/// everything [FlexColorScheme] it is a bit wild.
-FlexColorScheme flexColorSchemeLight(ThemeController controller) {
+/// everything [FlexColorScheme] can do, it is a bit wild.
+FlexColorScheme flexColorSchemeLight(ThemeController controller, Color source) {
   // Using a built-in scheme or one of the custom colors in the demo?
   final bool useBuiltIn = controller.schemeIndex > 2 &&
       controller.schemeIndex < AppColor.schemes.length - 1;
   // Get the enum index of scheme
   final int flexScheme = controller.schemeIndex - 3;
+
+  // TODO(rydmike): Remove when fix for issue #10386 has landed in stable.
+  // Workaround for issue https://github.com/flutter/flutter/issues/103864.
+  final bool useFakeTypo2018 =
+      (controller.useSubThemes && !controller.useTextTheme) ||
+          (!controller.useSubThemes && !controller.useMaterial3);
+  final TextTheme? fakeM2TypographyTextTheme =
+      useFakeTypo2018 ? AppData.m2TextTheme : null;
+  final Typography alwaysM3Typography =
+      Typography.material2021(platform: controller.platform);
+  // End of fix variables for issue #10386
 
   return FlexColorScheme.light(
     // Use controller to get current scheme colors, use custom "colors"
@@ -98,7 +149,7 @@ FlexColorScheme flexColorSchemeLight(ThemeController controller) {
             // the themed text. If you plan to put text on surfaces that are not
             // primary color tinted or primary colored, then you may need to
             // turn this off, or make custom text themes for those surfaces.
-            // Material3 has containers with matching colors too, they work
+            // Material3 has containers with matching on colors too, they work
             // great for contrast colored text, do use them too.
             blendTextTheme: controller.blendLightTextTheme,
             // Opt in/out of the Material 3 style matched TextTheme geometry, or
@@ -106,6 +157,9 @@ FlexColorScheme flexColorSchemeLight(ThemeController controller) {
             // not yet natively available in Flutter SDK 2.10.3 or earlier,
             // this offers it as a way to use it already now.
             useTextTheme: controller.useTextTheme,
+            // Outline thickness theming
+            thinBorderWidth: controller.thinBorderWidth,
+            thickBorderWidth: controller.thickBorderWidth,
             // Prefer Flutter SDK null default behavior for sub-themes, when
             // possible.
             useFlutterDefaults: controller.useFlutterDefaults,
@@ -126,7 +180,11 @@ FlexColorScheme flexColorSchemeLight(ThemeController controller) {
             // SchemeColor based ColorScheme color used on buttons & toggles.
             textButtonSchemeColor: controller.textButtonSchemeColor,
             elevatedButtonSchemeColor: controller.elevatedButtonSchemeColor,
+            elevatedButtonSecondarySchemeColor:
+                controller.elevatedButtonSecondarySchemeColor,
             outlinedButtonSchemeColor: controller.outlinedButtonSchemeColor,
+            outlinedButtonOutlineSchemeColor:
+                controller.outlinedButtonOutlineSchemeColor,
             toggleButtonsSchemeColor: controller.toggleButtonsSchemeColor,
             switchSchemeColor: controller.switchSchemeColor,
             checkboxSchemeColor: controller.checkboxSchemeColor,
@@ -257,8 +315,10 @@ FlexColorScheme flexColorSchemeLight(ThemeController controller) {
     // You can make your custom [FlexTones] object right here
     // and apps it it, this just uses an int value to select
     // between a few pre-configured ones.
-    tones: AppColor.flexTonesConfig(
-        Brightness.light, controller.usedFlexToneSetup),
+    tones:
+        FlexTone.values[controller.usedFlexToneSetup].tones(Brightness.light),
+    // Use custom surface tint color.
+    surfaceTint: controller.surfaceTintLight,
     //
     // ThemeData properties passed along directly to ThemeData.
     //
@@ -274,5 +334,16 @@ FlexColorScheme flexColorSchemeLight(ThemeController controller) {
     // with FlexColorScheme too, and in this demo we can see its
     // impact easily.
     useMaterial3: controller.useMaterial3,
+    // Workaround for issue: https://github.com/flutter/flutter/issues/103864.
+    // TODO(rydmike): Remove when fix for issue #10386 has landed in stable.
+    typography: alwaysM3Typography,
+    // Workaround for issue: https://github.com/flutter/flutter/issues/103864.
+    // TODO(rydmike): Remove when fix for issue #10386 has landed in stable.
+    textTheme: fakeM2TypographyTextTheme,
+    primaryTextTheme: fakeM2TypographyTextTheme,
+    // Add a custom theme extension with light mode code highlight colors.
+    extensions: <ThemeExtension<dynamic>>{
+      CodeTheme.harmonized(source, Brightness.light),
+    },
   );
 }

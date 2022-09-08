@@ -2,6 +2,8 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../widgets/app/responsive_scaffold.dart';
+
 /// App static functions and constants used in the example applications.
 ///
 /// In a real app you probably prefer putting these into different static
@@ -23,23 +25,27 @@ class AppData {
   static String title(BuildContext context) =>
       (context as Element).findAncestorWidgetOfExactType<MaterialApp>()!.title;
 
-  // // When building new public web versions of the demos, make sure to
-  // // update this info before triggering GitHub actions CI/CD that builds them.
-  // //
-  // // The name of the package this app demonstrates.
-  // static const String packageName = 'FlexColor\u{00AD}Scheme';
-  // // Version of the WEB build, usually same as package, but it also has a
-  // // build numbers.
-  // static const String versionMajor = '5';
-  // static const String versionBuild = '01';
-  // static const String version = '$versionMajor.0.1 Build-$versionBuild';
-  // static const String packageVersion = '5.0.1';
-  // static const String packageUrl = 'https://pub.dev/packages/flex_color_scheme';
-  // static const String flutterVersion = 'stable v2.10.5';
-  // static const String copyright = '© 2020, 2021, 2022';
-  // static const String author = 'Mike Rydstrom';
-  // static const String license = 'BSD 3-Clause License';
-  // static const String icon = 'assets/images/app_icon.png';
+  // When building new public web versions of the demos, make sure to
+  // update this info before triggering GitHub actions CI/CD that builds them.
+  //
+  // The name of the package this app demonstrates.
+  static const String packageName = 'FlexColor\u{00AD}Scheme';
+  // Version of the WEB build, usually same as package, but it also has a
+  // build numbers.
+  static const String versionMajor = '6';
+  static const String versionBuild = '01';
+  static const String version = '$versionMajor.0.0 Build-$versionBuild';
+  static const String packageVersion = '6.0.0';
+  static const String flutterVersion = 'stable 3.3.0';
+  static const String copyright = '© 2020, 2021, 2022';
+  static const String author = 'Mike Rydstrom';
+  static const String license = 'BSD 3-Clause License';
+  static const String icon = 'assets/images/app_icon.png';
+  static final Uri packageUri = Uri(
+    scheme: 'https',
+    host: 'pub.dev',
+    path: 'packages/flex_color_scheme',
+  );
 
   // The max dp width used for layout content on the screen in the available
   // body area. Wider content gets growing side padding, kind of like on most
@@ -59,7 +65,7 @@ class AppData {
   // this is media size.
   // Only at higher than this breakpoint will the menu expand from rail and
   // be possible to toggle between menu and rail. Below this breakpoint it
-  // toggles between hidden in the Drawerer and being a Rail, also on phones.
+  // toggles between hidden in the Drawer and being a Rail, also on phones.
   // This size was chosen because in combination codeViewWidthBreakpoint, it
   // gives us a breakpoint where we get code side by side view in desktop
   // rail mode already, and when it switches to menu mode, the desktop is
@@ -142,5 +148,140 @@ class AppData {
       fontSize: 11, // Defaults to 10 in Material2018 Typography.
       letterSpacing: 0.5, // Defaults to 1.5 in Material2018 Typography.
     ),
+  );
+
+  // The menu items that we use on the responsive side menu.
+  static const List<ResponsiveMenuItems> menuItems = <ResponsiveMenuItems>[
+    ResponsiveMenuItems(
+      label: 'Grid view',
+      labelSecondary: 'Page view',
+      icon: Icons.calendar_view_month_outlined,
+      iconSecondary: Icons.view_array_outlined,
+    ),
+    ResponsiveMenuItems(
+      label: 'Dark mode',
+      labelSecondary: 'Light mode',
+      icon: Icons.bedtime,
+      iconSecondary: Icons.wb_sunny,
+    ),
+    ResponsiveMenuItems(
+      label: 'Copy theme code',
+      icon: Icons.integration_instructions_outlined,
+    ),
+    ResponsiveMenuItems(
+      label: 'Copy ColorScheme',
+      icon: Icons.palette_outlined,
+    ),
+    ResponsiveMenuItems(
+      label: 'Expand all',
+      icon: Icons.open_in_full_outlined,
+    ),
+    ResponsiveMenuItems(
+      label: 'Close all',
+      icon: Icons.close_fullscreen_outlined,
+    ),
+    ResponsiveMenuItems(
+      label: 'Reset settings',
+      icon: Icons.replay_outlined,
+    ),
+  ];
+
+  // TODO(rydmike): Remove when fix for issue #10386 has landed in stable.
+  // Used as a workaround to provide a M2 like TextTheme using M3 Typography,
+  // so we do not have to switch between 2021 and 2018 (or 2014) Typography
+  // in the app dynamically. Instead is always uses M3 2021 Typography and
+  // simulates 2018 Typography. This is done to avoid issue:
+  // https://github.com/flutter/flutter/issues/103864
+  static const TextTheme m2TextTheme = TextTheme(
+    displayLarge: TextStyle(
+        debugLabel: 'englishLike displayLarge 2018',
+        fontSize: 96.0,
+        fontWeight: FontWeight.w300,
+        textBaseline: TextBaseline.alphabetic,
+        letterSpacing: -1.5),
+    displayMedium: TextStyle(
+        debugLabel: 'englishLike displayMedium 2018',
+        fontSize: 60.0,
+        fontWeight: FontWeight.w300,
+        textBaseline: TextBaseline.alphabetic,
+        letterSpacing: -0.5),
+    displaySmall: TextStyle(
+        debugLabel: 'englishLike displaySmall 2018',
+        fontSize: 48.0,
+        fontWeight: FontWeight.w400,
+        textBaseline: TextBaseline.alphabetic,
+        letterSpacing: 0.0),
+    headlineLarge: TextStyle(
+        debugLabel: 'englishLike headlineLarge 2018',
+        fontSize: 40.0,
+        fontWeight: FontWeight.w400,
+        textBaseline: TextBaseline.alphabetic,
+        letterSpacing: 0.25),
+    headlineMedium: TextStyle(
+        debugLabel: 'englishLike headlineMedium 2018',
+        fontSize: 34.0,
+        fontWeight: FontWeight.w400,
+        textBaseline: TextBaseline.alphabetic,
+        letterSpacing: 0.25),
+    headlineSmall: TextStyle(
+        debugLabel: 'englishLike headlineSmall 2018',
+        fontSize: 24.0,
+        fontWeight: FontWeight.w400,
+        textBaseline: TextBaseline.alphabetic,
+        letterSpacing: 0.0),
+    titleLarge: TextStyle(
+        debugLabel: 'englishLike titleLarge 2018',
+        fontSize: 20.0,
+        fontWeight: FontWeight.w500,
+        textBaseline: TextBaseline.alphabetic,
+        letterSpacing: 0.15),
+    titleMedium: TextStyle(
+        debugLabel: 'englishLike titleMedium 2018',
+        fontSize: 16.0,
+        fontWeight: FontWeight.w400,
+        textBaseline: TextBaseline.alphabetic,
+        letterSpacing: 0.15),
+    titleSmall: TextStyle(
+        debugLabel: 'englishLike titleSmall 2018',
+        fontSize: 14.0,
+        fontWeight: FontWeight.w500,
+        textBaseline: TextBaseline.alphabetic,
+        letterSpacing: 0.1),
+    bodyLarge: TextStyle(
+        debugLabel: 'englishLike bodyLarge 2018',
+        fontSize: 16.0,
+        fontWeight: FontWeight.w400,
+        textBaseline: TextBaseline.alphabetic,
+        letterSpacing: 0.5),
+    bodyMedium: TextStyle(
+        debugLabel: 'englishLike bodyMedium 2018',
+        fontSize: 14.0,
+        fontWeight: FontWeight.w400,
+        textBaseline: TextBaseline.alphabetic,
+        letterSpacing: 0.25),
+    bodySmall: TextStyle(
+        debugLabel: 'englishLike bodySmall 2018',
+        fontSize: 12.0,
+        fontWeight: FontWeight.w400,
+        textBaseline: TextBaseline.alphabetic,
+        letterSpacing: 0.4),
+    labelLarge: TextStyle(
+        debugLabel: 'englishLike labelLarge 2018',
+        fontSize: 14.0,
+        fontWeight: FontWeight.w500,
+        textBaseline: TextBaseline.alphabetic,
+        letterSpacing: 1.25),
+    labelMedium: TextStyle(
+        debugLabel: 'englishLike labelMedium 2018',
+        fontSize: 11.0,
+        fontWeight: FontWeight.w400,
+        textBaseline: TextBaseline.alphabetic,
+        letterSpacing: 1.5),
+    labelSmall: TextStyle(
+        debugLabel: 'englishLike labelSmall 2018',
+        fontSize: 10.0,
+        fontWeight: FontWeight.w400,
+        textBaseline: TextBaseline.alphabetic,
+        letterSpacing: 1.5),
   );
 }
