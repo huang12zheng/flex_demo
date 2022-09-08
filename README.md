@@ -100,7 +100,7 @@ encodeWithController(themeController); // return se about ThemeController
 // recover
 // themeController.setHive(String input)
 await themeController.setHive(themeController.getJson);
-await themeController.loadAll();
+<!-- await themeController.loadAll(); -->
 ```
 
 ## Additional information

@@ -49,6 +49,7 @@ extension ThemeServiceX on ThemeController {
     await (themeService as ThemeServiceHive)
         .hiveBox
         .putAll(converter.decode(input));
+    await loadAll();
   }
 }
 
